@@ -5,22 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Графический_редактор"
         mc:Ignorable="d"
-        Title="Графический редактор" Width="1366" Height="768" Background="#FFFBFBFB" ResizeMode="CanMinimize" Loaded="Window_Loaded">
+        Title="Графический редактор" Width="1366" Height="768" Background="#FFFBFBFB" ResizeMode="CanMinimize" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition  Width="*"/>
             <ColumnDefinition  Width="0.25*"/>
         </Grid.ColumnDefinitions>
-        <Canvas Grid.Column="0" Background="Gray" Name="canvas" Margin="5 0 0 5"/>
+        <Canvas Grid.Column="0" Background="Gray" Name="canvas" Margin="5 0 0 5" Focusable="True"/>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.15*"/>
+                <RowDefinition Height="0.1*"/>
                 <RowDefinition Height="0.5*"/>
                 <RowDefinition Height="0.15*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Button Grid.Row="0" Content="Добавить прямую" Margin="10" Click="Button_Click" FontFamily="Arial" FontSize="14"/>
-            <Grid Grid.Row="1" Margin="0 15">
+            <Grid Grid.Row="2" Margin="0 15">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
@@ -41,8 +42,19 @@
                 <TextBox Grid.Column="2" Grid.Row="1" Margin="15" FontFamily="Arial" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="0" IsReadOnly="True"/>
                 <TextBox Grid.Column="2" Grid.Row="2" Margin="15" FontFamily="Arial" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="1" IsReadOnly="True"/>
             </Grid>
-            <Button Grid.Row="2" Content="Преобразовать" Margin="10" FontFamily="Arial" FontSize="14" Click="Button_Click_1"/>
+            <Button Grid.Row="3" Content="Преобразовать" Margin="10" FontFamily="Arial" FontSize="14" Click="Button_Click_1"/>
+            <Label Grid.Row="1" Content="Матрица преобразований" FontFamily="Arial" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <DataGrid Grid.Row="4" Name="dataGrid">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Номер группы"/>
+                    <DataGridTextColumn Header="Цвет группы"/>                    
+                </DataGrid.Columns>                
+            </DataGrid>
         </Grid>
         <Label Content="Ax+By+C=0" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,0" FontFamily="Arial" FontSize="20" Name="data"/>
+        <Menu VerticalAlignment="Top" FontFamily="Arial" FontSize="14">
+            <MenuItem Header="Удалить" Click="MenuItem_Click"/>
+        </Menu>
     </Grid>
+    
 </Window>

@@ -23,6 +23,10 @@ namespace Графический_редактор
     {
         string path = "log.txt";
 
+        private List<List<MyLine>> groups;
+
+        private List<SolidColorBrush> colors = new List<SolidColorBrush>() { Brushes.Yellow, Brushes.Blue, Brushes.Red, Brushes.Purple };
+
         public MainWindow()
         {           
             InitializeComponent();               
@@ -60,9 +64,13 @@ namespace Графический_редактор
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            MyLine line = new MyLine(1, 1, 1, 0, 10);
+            groups = new List<List<MyLine>>();
+            MyLine line = new MyLine(-1, 1, 1, 0, 10);
+            MyLine line1 = new MyLine(5, -3, 10, -10, 0);
             line.Data = data;
             line.Draw(canvas);
+            line1.Data = data;
+            line1.Draw(canvas);
             for (int i = 0; i < 11;i++)
             {
                 canvas.Children.Add(CreateLine(canvas.ActualWidth / 2 - i*50, 0, canvas.ActualWidth / 2 - i * 50, canvas.ActualHeight, Brushes.Black));
@@ -77,30 +85,75 @@ namespace Графический_редактор
 
         private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            foreach(var c in canvas.Children)
+            List<MyLine> focused = FindFocused();
+            foreach (var ml in focused)
             {
-                var ml = c as MyLine;
-                if (ml != null && ml.IsFocused==true)
+                if (ml.Group == null)
                 {
-                    ml.LooseFocus();
+                    ml.IsFocused = false;
+                    ml.SetColor(Brushes.Black);
                 }
+                ml.LooseFocus();
             }
-            
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private List<MyLine> FindFocused()
         {
-            MyLine focused = new MyLine();
+            List<MyLine> focused = new List<MyLine>();
             foreach (var c in canvas.Children)
             {
                 var ml = c as MyLine;
                 if (ml != null && ml.IsFocused == true)
                 {
-                    focused = ml;
+                    focused.Add(ml);
                 }
             }
+            return focused;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            List<MyLine> focused = FindFocused();
             Matrix matrix = new Matrix(Double.Parse(m11.Text), Double.Parse(m12.Text), Double.Parse(m21.Text), Double.Parse(m22.Text), Double.Parse(m31.Text)*10, Double.Parse(m32.Text)*-10);
-            focused.Transform(matrix);
+            foreach(var ml in focused)
+            {
+                ml.Transform(matrix);
+            }
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            List<MyLine> focused = FindFocused();
+            foreach (var ml in focused)
+            {
+                ml.Remove();
+            }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.OemPlus)
+            {
+                List<MyLine> focused = FindFocused();
+                foreach (var ml in focused)
+                {
+                    if (ml.Group == null)
+                    {
+                        ml.Color = colors[groups.Count];
+                        ml.LooseFocus();
+                        ml.Group = focused;
+                    }                    
+                }
+                groups.Add(focused);
+            }
+            if (e.Key == Key.Delete)
+            {
+                List<MyLine> focused = FindFocused();
+                foreach (var ml in focused)
+                {
+                    ml.Remove();
+                }
+            }
         }
     }
 }

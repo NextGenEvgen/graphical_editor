@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Collections.Generic;
 using static System.Math;
 namespace Графический_редактор
 {
@@ -16,25 +17,38 @@ namespace Графический_редактор
         //Прямая
         private Line line;
         private Label startCoords;
-        private Label endCoords;        
+        private Label endCoords;
         private Point mouseCoords;
         private Ellipse startEllipse;
         private Ellipse endEllipse;
         private Canvas canvas;
+        //private List<MyLine> group;
         public Label Data { get; set; }
+        public List<MyLine> Group { get; set; }
+        public SolidColorBrush color = Brushes.Black;
+        public SolidColorBrush Color
+        {
+            get { return color; }
+            set
+            {
+                color = value;
+                line.Stroke = value;
+                startEllipse.Fill = value;
+                endEllipse.Fill = value;
+            }
+        }
 
+        public MyLine()
+        {
+
+        }
         /// <summary>
         /// Конструктор класса
         /// </summary>
         /// <param name="A">Коэффициент А</param>
         /// <param name="B">Коэффициент B</param>
         /// <param name="C">Коэффициент B</param>
-        
-        public MyLine()
-        {
-
-        }
-        public MyLine(double A, double B, double C,double X1, double X2)
+        public MyLine(double A, double B, double C, double X1, double X2)
         {
             //Определение центра координат
             oX = 1083 / 2;
@@ -46,12 +60,12 @@ namespace Графический_редактор
             startEllipse = new Ellipse();
             endEllipse = new Ellipse();
             //Установка свойств прямой
-            line.Stroke = Brushes.Black;            
+            line.Stroke = Brushes.Black;
             line.StrokeThickness = 3;
-            line.X1 = X1*10 + oX;
-            line.Y1 = ((A * X1 + C) / B)*10 + oY;
-            line.X2 = X2*10 + oX;
-            line.Y2 = ((A * X2 + C) / B)*10 + oY;
+            line.X1 = X1 * 10 + oX;
+            line.Y1 = ((A * X1 + C) / B) * 10 + oY;
+            line.X2 = X2 * 10 + oX;
+            line.Y2 = ((A * X2 + C) / B) * 10 + oY;
             //Перемещение кругов
             startEllipse.RenderTransform = new TranslateTransform(line.X1 - 5, line.Y1 - 5);
             endEllipse.RenderTransform = new TranslateTransform(line.X2 - 5, line.Y2 - 5);
@@ -64,7 +78,7 @@ namespace Графический_редактор
 
             startCoords = new Label();
             startCoords.Content = $"{Round((line.X1 - oX) / 10, 2)};{Round((line.Y1 - oY) / -10, 2)}";
-            startCoords.Margin = new Thickness(line.X1 -  10, line.Y1, 0, 0);
+            startCoords.Margin = new Thickness(line.X1 - 10, line.Y1, 0, 0);
             startCoords.Foreground = Brushes.White;
 
             endCoords = new Label();
@@ -74,13 +88,13 @@ namespace Графический_редактор
             //Назначение событий перемещения
             startEllipse.MouseDown += OnMouseDown;
             startEllipse.MouseMove += Start_MouseMove;
-            startEllipse.MouseUp += OnMouseUp;            
-            
+            startEllipse.MouseUp += OnMouseUp;
+
             endEllipse.MouseDown += OnMouseDown;
             endEllipse.MouseMove += End_MouseMove;
-            endEllipse.MouseUp += OnMouseUp;          
-            
-            
+            endEllipse.MouseUp += OnMouseUp;
+
+
             line.MouseLeftButtonDown += OnMouseDown;
             line.MouseUp += OnMouseUp;
             line.MouseMove += Line_MouseMove;
@@ -91,26 +105,25 @@ namespace Графический_редактор
         public void LooseFocus()
         {
             IsFocused = false;
-            line.Stroke = Brushes.Black;
-            startEllipse.Fill = Brushes.Black;
-            endEllipse.Fill = Brushes.Black;
-            line.RenderTransform = null;
+            line.Stroke = Color;
+            startEllipse.Fill = Color;
+            endEllipse.Fill = Color;
+            //line.RenderTransform = null;
         }
 
         private void Line_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            foreach (var c in canvas.Children)
+            IsFocused = true;
+            SetColor(Brushes.Green);
+            if (Group!=null)
             {
-                var ml = c as MyLine;
-                if (ml != null && ml.IsFocused == true)
+                foreach (var ml in Group)
                 {
-                    ml.LooseFocus();
+                    ml.IsFocused = true;
+                    ml.SetColor(Brushes.Green);
                 }
             }
-            IsFocused = true;
-            line.Stroke = Brushes.Green;
-            startEllipse.Fill = Brushes.Green;
-            endEllipse.Fill = Brushes.Green;
+            
         }
 
         private int GDC(int a, int b)
@@ -125,9 +138,9 @@ namespace Графический_редактор
         }
 
         private void Line_MouseEnter(object sender, MouseEventArgs e)
-        {            
+        {
             if (Data == null) throw new System.Exception("Объекту не передан Label для вывода данных");
-            double A = -((line.Y2-oY)/-10) + ((line.Y1 - oY) / -10);
+            double A = -((line.Y2 - oY) / -10) + ((line.Y1 - oY) / -10);
             double B = ((line.X2 - oX) / 10) - ((line.X1 - oX) / 10);
             double C = ((line.X1 - oX) / 10) * ((line.Y2 - oY) / -10) - ((line.X2 - oX) / 10) * ((line.Y1 - oY) / -10);
             int gdc = GDC((int)A, (int)B);
@@ -139,15 +152,26 @@ namespace Графический_редактор
 
         private void OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            
-            line.Y1 = (startEllipse.RenderTransform as TranslateTransform).Y + 5;
-            line.Y2 = (endEllipse.RenderTransform as TranslateTransform).Y + 5;
-            startCoords.Content = $"{Round((line.X1 - oX) / 10, 2)};{Round((line.Y1 - oY) / -10, 2)}";
-            startCoords.Margin = new Thickness(line.X1 - 5, line.Y1, 0, 0);
-            endCoords.Content = $"{Round((line.X2 - oX) / 10, 2)};{Round((line.Y2 - oY) / -10, 2)}";
-            endCoords.Margin = new Thickness(line.X2 - 5, line.Y2, 0, 0);
+            double offset = (startEllipse.RenderTransform as TranslateTransform).Y + 5 - line.Y1;
+            if (Group != null)
+            {
+                foreach (var ml in Group)
+                {
+                    ml.MakeShift(offset);
+                }
+            }
+            MakeShift(offset);
             mouseCoords = e.GetPosition(null);
             (sender as Shape).ReleaseMouseCapture();
+        }
+
+        public void MakeShift(double offset)
+        {
+            line.Y1 += offset;
+            line.Y2 += offset;
+            ReplaceLabels();
+            startEllipse.RenderTransform = new TranslateTransform(line.X1 - 5, line.Y1 - 5);
+            endEllipse.RenderTransform = new TranslateTransform(line.X2 - 5, line.Y2 - 5);
         }
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -160,7 +184,7 @@ namespace Графический_редактор
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                startEllipse.RenderTransform = new TranslateTransform(e.GetPosition(null).X - 5, e.GetPosition(null).Y - 5); 
+                startEllipse.RenderTransform = new TranslateTransform(e.GetPosition(null).X - 5, e.GetPosition(null).Y - 5);
                 line.X1 = e.GetPosition(line).X;
                 line.Y1 = e.GetPosition(line).Y;
             }
@@ -184,12 +208,8 @@ namespace Графический_редактор
             {
                 startEllipse.RenderTransform = new TranslateTransform(line.X1 - 5, e.GetPosition(null).Y + line.Y1 - mouseCoords.Y - 5);
                 endEllipse.RenderTransform = new TranslateTransform(line.X2 - 5, e.GetPosition(null).Y + line.Y2 - mouseCoords.Y - 5);
-                //line.Y1 = (startEllipse.RenderTransform as TranslateTransform).Y;
-                //line.Y2 = (startEllipse.RenderTransform as TranslateTransform).Y;
-                //line.RenderTransform = new TranslateTransform(0, e.GetPosition(null).Y - mouseCoords.Y);
             }
         }
-
         /// <summary>
         /// Отрисовка объекта
         /// </summary>
@@ -205,6 +225,28 @@ namespace Графический_редактор
             canvas.Children.Add(endCoords);
         }
 
+        public void Remove()
+        {
+            canvas.Children.Remove(line);
+            canvas.Children.Remove(startEllipse);
+            canvas.Children.Remove(endEllipse);
+            canvas.Children.Remove(startCoords);
+            canvas.Children.Remove(endCoords);
+            canvas.Children.Remove(this);
+        }
+
+        public void ReplaceLabels()
+        {
+            startCoords.Content = $"{Round((line.X1 - oX) / 10, 2)};{Round((line.Y1 - oY) / -10, 2)}";
+            startCoords.Margin = new Thickness(line.X1 - 5, line.Y1, 0, 0);
+            endCoords.Content = $"{Round((line.X2 - oX) / 10, 2)};{Round((line.Y2 - oY) / -10, 2)}";
+            endCoords.Margin = new Thickness(line.X2 - 5, line.Y2, 0, 0);
+        }
+
+        /// <summary>
+        /// Применение матрицы преобразований к прямой
+        /// </summary>
+        /// <param name="matrix">Матрица преобразований</param>
         public void Transform(Matrix matrix)
         {
             if (line == null)
@@ -218,6 +260,14 @@ namespace Графический_редактор
             line.Y2 = (line.X2 - oX) * matrix.M12 + (line.Y2 - oY) * matrix.M22 + (matrix.OffsetY + oY);
             startEllipse.RenderTransform = new TranslateTransform(line.X1 - 5, line.Y1 - 5);
             endEllipse.RenderTransform = new TranslateTransform(line.X2 - 5, line.Y2 - 5);
+            ReplaceLabels();
+        }
+
+        public void SetColor(SolidColorBrush color)
+        {
+            line.Stroke = color;
+            startEllipse.Fill = color;
+            endEllipse.Fill = color;
         }
     }
 }
