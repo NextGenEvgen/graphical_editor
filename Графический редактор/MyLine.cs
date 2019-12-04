@@ -115,7 +115,7 @@ namespace Графический_редактор
         {
             IsFocused = true;
             SetColor(Brushes.Green);
-            if (Group!=null)
+            if (Group != null)
             {
                 foreach (var ml in Group)
                 {
@@ -123,7 +123,7 @@ namespace Графический_редактор
                     ml.SetColor(Brushes.Green);
                 }
             }
-            
+
         }
 
         private int GDC(int a, int b)
@@ -152,23 +152,26 @@ namespace Графический_редактор
 
         private void OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            double offset = (startEllipse.RenderTransform as TranslateTransform).Y + 5 - line.Y1;
+            double offsetX = (startEllipse.RenderTransform as TranslateTransform).X + 5 - line.X1;
+            double offsetY = (startEllipse.RenderTransform as TranslateTransform).Y + 5 - line.Y1;
             if (Group != null)
             {
                 foreach (var ml in Group)
                 {
-                    ml.MakeShift(offset);
+                    ml.MakeShift(offsetX, offsetY);
                 }
             }
-            MakeShift(offset);
+            if (Group == null) MakeShift(offsetX, offsetY);
             mouseCoords = e.GetPosition(null);
             (sender as Shape).ReleaseMouseCapture();
         }
 
-        public void MakeShift(double offset)
+        public void MakeShift(double offsetX, double offsetY)
         {
-            line.Y1 += offset;
-            line.Y2 += offset;
+            line.X1 += offsetX;
+            line.X2 += offsetX;
+            line.Y1 += offsetY;
+            line.Y2 += offsetY;
             ReplaceLabels();
             startEllipse.RenderTransform = new TranslateTransform(line.X1 - 5, line.Y1 - 5);
             endEllipse.RenderTransform = new TranslateTransform(line.X2 - 5, line.Y2 - 5);
@@ -206,8 +209,10 @@ namespace Графический_редактор
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                startEllipse.RenderTransform = new TranslateTransform(line.X1 - 5, e.GetPosition(null).Y + line.Y1 - mouseCoords.Y - 5);
-                endEllipse.RenderTransform = new TranslateTransform(line.X2 - 5, e.GetPosition(null).Y + line.Y2 - mouseCoords.Y - 5);
+                startEllipse.RenderTransform = new TranslateTransform(e.GetPosition(null).X + line.X1 - mouseCoords.X - 5, e.GetPosition(null).Y + line.Y1 - mouseCoords.Y - 5);
+                endEllipse.RenderTransform = new TranslateTransform(e.GetPosition(null).X + line.X2 - mouseCoords.X - 5, e.GetPosition(null).Y + line.Y2 - mouseCoords.Y - 5);
+                //startEllipse.RenderTransform = new TranslateTransform(line.X1 - 5, e.GetPosition(null).Y + line.Y1 - mouseCoords.Y - 5);
+                //endEllipse.RenderTransform = new TranslateTransform(line.X2 - 5, e.GetPosition(null).Y + line.Y2 - mouseCoords.Y - 5);
             }
         }
         /// <summary>

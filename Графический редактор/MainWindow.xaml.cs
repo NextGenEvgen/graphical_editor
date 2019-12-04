@@ -65,12 +65,15 @@ namespace Графический_редактор
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             groups = new List<List<MyLine>>();
-            MyLine line = new MyLine(-1, 1, 1, 0, 10);
-            MyLine line1 = new MyLine(5, -3, 10, -10, 0);
+            MyLine line = new MyLine((double)1 / 2, (double)-1 / 2, 1, 2, 13);
+            MyLine line1 = new MyLine((double)1 / 23, (double)-12 / 115, 1, 1, 13);
+            MyLine line2 = new MyLine((double)-3 / 8, (double)-1 / 16, 1, 1, 2);
             line.Data = data;
             line.Draw(canvas);
             line1.Data = data;
             line1.Draw(canvas);
+            line2.Data = data;
+            line2.Draw(canvas);
             for (int i = 0; i < 11;i++)
             {
                 canvas.Children.Add(CreateLine(canvas.ActualWidth / 2 - i*50, 0, canvas.ActualWidth / 2 - i * 50, canvas.ActualHeight, Brushes.Black));
