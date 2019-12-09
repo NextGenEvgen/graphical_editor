@@ -63,6 +63,7 @@
                 <MenuItem Header="Загрузить"/>
             </MenuItem>
             <MenuItem Header="Морфинг" Name="morf" Click="Morf_Click"/>
+            <MenuItem Header="3D Дом" Name="house3d" Click="House3d_Click"/>
         </Menu>
     </Grid>
 

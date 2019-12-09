@@ -179,5 +179,11 @@ namespace Графический_редактор
             Morfing morfing = new Morfing();
             morfing.ShowDialog();
         }
+
+        private void House3d_Click(object sender, RoutedEventArgs e)
+        {
+            House3D house = new House3D();
+            house.ShowDialog();
+        }
     }
 }
