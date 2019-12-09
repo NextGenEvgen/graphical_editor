@@ -10,8 +10,8 @@ namespace Графический_редактор
     public class MyLine : UIElement
     {
         //Центр координат
-        private double oX;
-        private double oY;
+        private double oX = 1083 / 2;
+        private double oY = 734 / 2;
         /// <summary>
         /// Проверка наличия фокуса над прямой
         /// </summary>
@@ -76,6 +76,36 @@ namespace Графический_редактор
                 endEllipse.Fill = value;
             }
         }
+        public MyLine(double X1, double Y1, double X2, double Y2)
+        {
+            line = new Line();
+            startEllipse = new Ellipse();
+            endEllipse = new Ellipse();
+
+            line.Stroke = Brushes.Black;
+            line.StrokeThickness = 3;
+            line.X1 = X1;
+            line.Y1 = Y1;
+            line.X2 = X2;
+            line.Y2 = Y2;
+
+            startEllipse.RenderTransform = new TranslateTransform(line.X1 - 5, line.Y1 - 5);
+            endEllipse.RenderTransform = new TranslateTransform(line.X2 - 5, line.Y2 - 5);
+            startEllipse.Fill = Brushes.Black;
+            endEllipse.Fill = Brushes.Black;
+
+            startEllipse.Height = 10;
+            startEllipse.Width = 10;
+            endEllipse.Height = 10;
+            endEllipse.Width = 10;
+
+            startEllipse.MouseDown += OnMouseDown;
+            startEllipse.MouseMove += EllipseMove;
+            startEllipse.MouseUp += OnEllipseMouseUp;
+            endEllipse.MouseDown += OnMouseDown;
+            endEllipse.MouseMove += EllipseMove;
+            endEllipse.MouseUp += OnEllipseMouseUp;
+        }
         /// <summary>
         /// Конструктор класса
         /// </summary>
@@ -93,9 +123,6 @@ namespace Графический_редактор
         /// <param name="X2">Конечная точка на оси Y</param>
         public MyLine(double A, double B, double C, double X1, double X2)
         {
-            //Определение центра координат
-            oX = 1083 / 2;
-            oY = 734 / 2;
             //Установка фокуса на false
             IsFocused = false;
             //Инициализация
@@ -229,6 +256,16 @@ namespace Графический_редактор
             //startEllipse.RenderTransform = new TranslateTransform(line.X1 - 5, line.Y1 - 5);
             //endEllipse.RenderTransform = new TranslateTransform(line.X2 - 5, line.Y2 - 5);
         }
+        public void MakeShift(double offsetX1, double offsetY1, double offsetX2, double offsetY2, bool makeEqual)
+        {
+            line.X1 = offsetX1;
+            line.X2 = offsetX2;
+            line.Y1 = offsetY1;
+            line.Y2 = offsetY2;
+            ReplaceLabels();
+            startEllipse.RenderTransform = new TranslateTransform(line.X1 - 5, line.Y1 - 5);
+            endEllipse.RenderTransform = new TranslateTransform(line.X2 - 5, line.Y2 - 5);
+        }
         /// <summary>
         /// Сдвиг всей прямой
         /// </summary>
@@ -357,8 +394,11 @@ namespace Графический_редактор
             canvas.Children.Add(line);
             canvas.Children.Add(startEllipse);
             canvas.Children.Add(endEllipse);
-            canvas.Children.Add(startCoords);
-            canvas.Children.Add(endCoords);
+            if (startCoords != null)
+            {
+                canvas.Children.Add(startCoords);
+                canvas.Children.Add(endCoords);
+            }
         }
         /// <summary>
         /// Удаление прямой с полотна
@@ -368,8 +408,11 @@ namespace Графический_редактор
             canvas.Children.Remove(line);
             canvas.Children.Remove(startEllipse);
             canvas.Children.Remove(endEllipse);
-            canvas.Children.Remove(startCoords);
-            canvas.Children.Remove(endCoords);
+            if (startCoords != null)
+            {
+                canvas.Children.Remove(startCoords);
+                canvas.Children.Remove(endCoords);
+            }
             canvas.Children.Remove(this);
         }
         /// <summary>
@@ -377,10 +420,13 @@ namespace Графический_редактор
         /// </summary>
         public void ReplaceLabels()
         {
-            startCoords.Content = $"{Round((line.X1 - oX) / 10, 2)};{Round((line.Y1 - oY) / -10, 2)}";
-            startCoords.Margin = new Thickness(line.X1 - 5, line.Y1 + 5, 0, 0);
-            endCoords.Content = $"{Round((line.X2 - oX) / 10, 2)};{Round((line.Y2 - oY) / -10, 2)}";
-            endCoords.Margin = new Thickness(line.X2 - 5, line.Y2 + 5, 0, 0);
+            if (startCoords != null)
+            {
+                startCoords.Content = $"{Round((line.X1 - oX) / 10, 2)};{Round((line.Y1 - oY) / -10, 2)}";
+                startCoords.Margin = new Thickness(line.X1 - 5, line.Y1 + 5, 0, 0);
+                endCoords.Content = $"{Round((line.X2 - oX) / 10, 2)};{Round((line.Y2 - oY) / -10, 2)}";
+                endCoords.Margin = new Thickness(line.X2 - 5, line.Y2 + 5, 0, 0);
+            }
         }
         /// <summary>
         /// Применение матрицы преобразований к прямой

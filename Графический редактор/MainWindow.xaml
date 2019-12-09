@@ -57,7 +57,12 @@
         </Grid>
         <Label Content="Ax+By+C=0" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,0" FontFamily="Arial" FontSize="20" Name="data"/>
         <Menu VerticalAlignment="Top" FontFamily="Arial" FontSize="14">
-            <MenuItem Header="Удалить" Click="MenuItem_Click"/>
+            <MenuItem Header="Файл">
+                <MenuItem Header="Сохранить"/>
+                <Separator/>
+                <MenuItem Header="Загрузить"/>
+            </MenuItem>
+            <MenuItem Header="Морфинг" Name="morf" Click="Morf_Click"/>
         </Menu>
     </Grid>
 
