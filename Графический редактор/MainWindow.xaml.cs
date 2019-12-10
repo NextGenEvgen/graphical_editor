@@ -60,13 +60,21 @@ namespace Графический_редактор
 
             for (int i = 0; i < 11; i++)
             {
-                canvas.Children.Add(CreateLine(canvas.ActualWidth / 2 - i * 50, 0, canvas.ActualWidth / 2 - i * 50, canvas.ActualHeight, Brushes.Black));
-                canvas.Children.Add(CreateLine(canvas.ActualWidth / 2 + i * 50, 0, canvas.ActualWidth / 2 + i * 50, canvas.ActualHeight, Brushes.Black));
-                canvas.Children.Add(CreateLine(0, canvas.ActualHeight / 2 - i * 50, canvas.ActualWidth, canvas.ActualHeight / 2 - i * 50, Brushes.Black));
-                canvas.Children.Add(CreateLine(0, canvas.ActualHeight / 2 + i * 50, canvas.ActualWidth, canvas.ActualHeight / 2 + i * 50, Brushes.Black));
+                canvas.Children.Add(CreateLine(canvas.ActualWidth / 2 - i * 50,
+                    0, canvas.ActualWidth / 2 - i * 50, canvas.ActualHeight, Brushes.Black));
+                canvas.Children.Add(CreateLine(canvas.ActualWidth / 2 + i * 50,
+                    0, canvas.ActualWidth / 2 + i * 50, canvas.ActualHeight, Brushes.Black));
+                canvas.Children.Add(CreateLine(0, canvas.ActualHeight / 2 - i * 50,
+                    canvas.ActualWidth, canvas.ActualHeight / 2 - i * 50, Brushes.Black));
+                canvas.Children.Add(CreateLine(0, canvas.ActualHeight / 2 + i * 50,
+                    canvas.ActualWidth, canvas.ActualHeight / 2 + i * 50, Brushes.Black));
             }
-            canvas.Children.Add(CreateLine(0, canvas.ActualHeight / 2, canvas.ActualWidth, canvas.ActualHeight / 2, Brushes.Red));
-            canvas.Children.Add(CreateLine(canvas.ActualWidth / 2, 0, canvas.ActualWidth / 2, canvas.ActualHeight, Brushes.Red));
+            //Ось Y
+            canvas.Children.Add(CreateLine(0, canvas.ActualHeight / 2, canvas.ActualWidth,
+                canvas.ActualHeight / 2, Brushes.Red));
+            //Ось Х
+            canvas.Children.Add(CreateLine(canvas.ActualWidth / 2, 0,
+                canvas.ActualWidth / 2, canvas.ActualHeight, Brushes.Red));
             canvas.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
             MyLine line = new MyLine((double)1 / 2, (double)-1 / 2, 1, 2, 13);
             MyLine line1 = new MyLine((double)1 / 23, (double)-12 / 115, 1, 13, 1);
@@ -164,6 +172,18 @@ namespace Графический_редактор
             {
                 ml.Transform(matrix);
             }
+        }
+
+        private void Morf_Click(object sender, RoutedEventArgs e)
+        {
+            Morfing morfing = new Morfing();
+            morfing.ShowDialog();
+        }
+
+        private void House3d_Click(object sender, RoutedEventArgs e)
+        {
+            House3D house = new House3D();
+            house.ShowDialog();
         }
     }
 }
