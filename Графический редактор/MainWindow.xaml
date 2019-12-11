@@ -64,6 +64,7 @@
             </MenuItem>
             <MenuItem Header="Морфинг" Name="morf" Click="Morf_Click"/>
             <MenuItem Header="3D Дом" Name="house3d" Click="House3d_Click"/>
+            <MenuItem Header="Удаление невидимых линий" Name="horizon" Click="Horizon_Click"/>
         </Menu>
     </Grid>
 

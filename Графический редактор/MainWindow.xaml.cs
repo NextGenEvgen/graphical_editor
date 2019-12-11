@@ -185,5 +185,11 @@ namespace Графический_редактор
             House3D house = new House3D();
             house.ShowDialog();
         }
+
+        private void Horizon_Click(object sender, RoutedEventArgs e)
+        {
+            RemoveHorizon remove = new RemoveHorizon();
+            remove.ShowDialog();
+        }
     }
 }
