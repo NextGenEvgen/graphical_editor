@@ -18,9 +18,9 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Slider Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="10" Minimum="1" Maximum="15" Value="10" ValueChanged="Slider_ValueChanged"/>
+            <Slider Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="10" Minimum="9" Maximum="10" Value="9" ValueChanged="Slider_ValueChanged"/>
             <Slider Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10" Minimum="1" Maximum="50" Value="20" ValueChanged="Slider_ValueChanged_1"/>
-            <Slider Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="10" Minimum="-20" Maximum="20" Value="10" ValueChanged="Slider_ValueChanged_2"/>
+            <Slider Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="10" Minimum="0" Maximum="20" Value="10" ValueChanged="Slider_ValueChanged_2"/>
         </Grid>
     </Grid>
 </Window>
