@@ -58,12 +58,13 @@
         <Label Content="Ax+By+C=0" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,0" FontFamily="Arial" FontSize="20" Name="data"/>
         <Menu VerticalAlignment="Top" FontFamily="Arial" FontSize="14">
             <MenuItem Header="Файл">
-                <MenuItem Header="Сохранить"/>
+                <MenuItem Header="Сохранить"  Name="save" Click="Save_Click"/>
                 <Separator/>
-                <MenuItem Header="Загрузить"/>
+                <MenuItem Header="Загрузить"  Name="load" Click="Load_Click"/>
             </MenuItem>
             <MenuItem Header="Морфинг" Name="morf" Click="Morf_Click"/>
             <MenuItem Header="3D Дом" Name="house3d" Click="House3d_Click"/>
+            <MenuItem Header="Удаление невидимых линий" Name="horizon" Click="Horizon_Click"/>
         </Menu>
     </Grid>
 

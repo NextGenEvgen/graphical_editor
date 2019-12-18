@@ -5,12 +5,10 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace Графический_редактор
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         string path = "log.txt";
@@ -166,7 +164,6 @@ namespace Графический_редактор
             double angle = 0;
             if (!double.TryParse(radians.Text, out angle)) { MessageBox.Show("Введено некорректное число"); return; }
             angle *= -Math.PI / 180;
-            //MessageBox.Show(angle.ToString());
             Matrix matrix = new Matrix(Math.Cos(angle), Math.Sin(angle), -Math.Sin(angle), Math.Cos(angle), 0, 0);
             foreach (var ml in focused)
             {
@@ -184,6 +181,74 @@ namespace Графический_редактор
         {
             House3D house = new House3D();
             house.ShowDialog();
+        }
+
+        private void Horizon_Click(object sender, RoutedEventArgs e)
+        {
+            RemoveHorizon remove = new RemoveHorizon();
+            remove.ShowDialog();
+        }
+
+        private List<MyLine> FindMyLines()
+        {
+            List<MyLine> lines = new List<MyLine>();
+            foreach (var i in canvas.Children)
+            {
+                if ((i as MyLine) != null) 
+                {
+                    lines.Add(i as MyLine);
+                }
+            }
+            return lines;
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            string path = "";
+            List<MyLine> lines = FindMyLines();
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.Filter = "Файл сохраненных прямых | *.csl";
+            if (fileDialog.ShowDialog() == true)
+            {
+                path = fileDialog.FileName;
+                using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+                {
+                    byte[] array;
+                    foreach (MyLine ml in lines)
+                    {
+                        array = System.Text.Encoding.Default.GetBytes(ml.ToString() + '\n');
+                        fs.Write(array, 0, array.Length);
+                    }
+                }
+                MessageBox.Show("Файл успешно сохранен");
+            }
+        }
+
+        private void Load_Click(object sender, RoutedEventArgs e)
+        {
+            string path = "";
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "Файл сохраненных прямых | *.csl";
+            if (fileDialog.ShowDialog() == true)
+            {
+                path = fileDialog.FileName;
+                using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+                {
+                    byte[] array = new byte[fs.Length];
+                    fs.Read(array, 0, array.Length);
+                    string text = System.Text.Encoding.Default.GetString(array);
+                    string[] txtArr = text.Split(new char[] { '\n' });
+                    foreach(string s in txtArr)
+                    {
+                        if (s == "") return;
+                        //string[] coords = s.Split(new char[] { ' ' });
+                        MyLine line = new MyLine(s);
+                        line.Data = data;
+                        line.Draw(canvas);
+                    }
+                }
+                MessageBox.Show("Файл успешно загружен");
+            }
         }
     }
 }

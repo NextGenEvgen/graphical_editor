@@ -167,6 +167,54 @@ namespace Графический_редактор
             line.MouseEnter += Line_MouseEnter;
             line.MouseRightButtonDown += Line_MouseRightButtonDown;
         }
+
+        public MyLine(string coordsInText)
+        {
+            string[] coords = coordsInText.Split(new char[] { ' ' });
+            line = new Line();
+            startEllipse = new Ellipse();
+            endEllipse = new Ellipse();
+
+            line.Stroke = Brushes.Black;
+            line.StrokeThickness = 3;
+            line.X1 = double.Parse(coords[0]);
+            line.Y1 = double.Parse(coords[1]);
+            line.X2 = double.Parse(coords[2]);
+            line.Y2 = double.Parse(coords[3]);
+
+            startEllipse.RenderTransform = new TranslateTransform(line.X1 - 5, line.Y1 - 5);
+            endEllipse.RenderTransform = new TranslateTransform(line.X2 - 5, line.Y2 - 5);
+            startEllipse.Fill = Brushes.Black;
+            endEllipse.Fill = Brushes.Black;
+
+            startEllipse.Height = 10;
+            startEllipse.Width = 10;
+            endEllipse.Height = 10;
+            endEllipse.Width = 10;
+
+            startCoords = new Label();
+            startCoords.Content = $"{Round((line.X1 - oX) / 10, 2)};{Round((line.Y1 - oY) / -10, 2)}";
+            startCoords.Margin = new Thickness(line.X1 - 10, line.Y1, 0, 0);
+            startCoords.Foreground = Brushes.White;
+            endCoords = new Label();
+            endCoords.Content = $"{Round((line.X2 - oX) / 10, 2)};{Round((line.Y2 - oY) / -10, 2)}";
+            endCoords.Margin = new Thickness(line.X2 - 10, line.Y2, 0, 0);
+            endCoords.Foreground = Brushes.White;
+
+            startEllipse.MouseDown += OnMouseDown;
+            startEllipse.MouseMove += EllipseMove;
+            startEllipse.MouseUp += OnEllipseMouseUp;
+            endEllipse.MouseDown += OnMouseDown;
+            endEllipse.MouseMove += EllipseMove;
+            endEllipse.MouseUp += OnEllipseMouseUp;
+            line.MouseLeftButtonDown += OnMouseDown;
+            line.MouseUp += OnMouseUp;
+            line.MouseMove += Line_MouseMove;
+            line.MouseEnter += Line_MouseEnter;
+            line.MouseRightButtonDown += Line_MouseRightButtonDown;
+
+        }
+
         /// <summary>
         /// Расфокусировка прямой
         /// </summary>
@@ -253,8 +301,6 @@ namespace Графический_редактор
             line.Y1 += offsetY1;
             line.Y2 += offsetY2;
             ReplaceLabels();
-            //startEllipse.RenderTransform = new TranslateTransform(line.X1 - 5, line.Y1 - 5);
-            //endEllipse.RenderTransform = new TranslateTransform(line.X2 - 5, line.Y2 - 5);
         }
         public void MakeShift(double offsetX1, double offsetY1, double offsetX2, double offsetY2, bool makeEqual)
         {
@@ -466,6 +512,11 @@ namespace Графический_редактор
             line.Stroke = color;
             startEllipse.Fill = color;
             endEllipse.Fill = color;
+        }
+
+        public override string ToString()
+        {
+            return StartPoint.X.ToString() + " " + StartPoint.Y.ToString() + " " + EndPoint.X.ToString() + " " + EndPoint.Y.ToString();
         }
     }
 }
