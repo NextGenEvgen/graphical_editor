@@ -51,23 +51,25 @@ namespace Графический_редактор
         private void Draw()
         {
             points.Clear();
-            for (int shift = 0; shift < 20; shift++)
+            for (int shift = 20; shift >= 0; shift--)
             {
                 points.Add(new List<Point>());
                 for (int i = 0; i < canvas.ActualWidth/7; i++)
                 {
-                    points[shift].Add(MakePoint(i, shift));
-                    //Point p2 = MakePoint(i + 1, shift);
-                    //canvas.Children.Add(CreateLine(p1, p2, Brushes.Green));
-                }
-                for (int i = 0; i < points[shift].Count - 1; i++) 
+                    points[20 - shift].Add(MakePoint(i, shift));                    
+                }                
+            }
+            for (int i = 0; i < points.Count - 1; i++) 
+            {
+                for (int j = 0; j < points[i].Count - 1; j++)
                 {
-                    if (shift >= 1 && points[shift - 1][i + 1].Y <= points[shift][i].Y) points[shift][i] = new Point(points[shift][i].X, points[shift - 1][i + 1].Y);
-                    canvas.Children.Add(CreateLine(points[shift][i], points[shift][i+1], Brushes.Green));
-                    if (shift !=0) canvas.Children.Add(CreateLine(points[shift-1][i], points[shift][i], Brushes.Green));
+                    Polygon polygon = new Polygon();
+                    polygon.Points = new PointCollection() {points[i][j], points[i][j+1], points[i + 1][j + 1], points[i+1][j] };
+                    polygon.Fill = Brushes.Black;
+                    polygon.Stroke = Brushes.Green;
+                    canvas.Children.Add(polygon);
                 }
             }
-            
             //for (int shift = 0; shift < 20; shift++)
             //{
             //    for (int i = 0; i < canvas.ActualWidth / xMult; i++)
