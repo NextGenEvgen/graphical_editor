@@ -70,31 +70,6 @@ namespace Графический_редактор
                     canvas.Children.Add(polygon);
                 }
             }
-            //for (int shift = 0; shift < 20; shift++)
-            //{
-            //    for (int i = 0; i < canvas.ActualWidth / xMult; i++)
-            //    {
-            //        double y1 = 0;
-            //        double y2 = 0;
-            //        if (yMult * Math.Cos((i + shift + 1) * xMult) * Math.Sin((i + shift + 1) * xMult) + canvas.ActualHeight - 50 - shift * shiftMult >= yMult * Math.Cos((i + shift) * xMult) * Math.Sin((i + shift) * xMult) + canvas.ActualHeight - 50 - shift * shiftMult)
-            //        {
-            //            y1 = yMult * Math.Cos((i + shift) * xMult) * Math.Sin((i + shift) * xMult) + canvas.ActualHeight - 50 - shift * shiftMult;
-            //        }
-            //        else
-            //        {
-            //            y1 = yMult * Math.Cos((i + shift + 1) * xMult) * Math.Sin((i + shift + 1) * xMult) + canvas.ActualHeight - 50 - shift * shiftMult;
-            //        }
-            //        if (yMult * Math.Cos((i + shift + 2) * xMult) * Math.Sin((i + shift + 2) * xMult) + canvas.ActualHeight - 50 - shift * xMult >= yMult * Math.Cos((i + shift + 1) * xMult) * Math.Sin((i + shift + 1) * xMult) + canvas.ActualHeight - 50 - shift * shiftMult)
-            //        {
-            //            y2 = yMult * Math.Cos((i + shift + 1) * xMult) * Math.Sin((i + shift + 1) * xMult) + canvas.ActualHeight - 50 - shift * shiftMult;
-            //        }
-            //        else
-            //        {
-            //            y2 = yMult * Math.Cos((i + shift + 2) * xMult) * Math.Sin((i + shift + 2) * xMult) + canvas.ActualHeight - 50 - shift * shiftMult;
-            //        }
-            //        canvas.Children.Add(CreateLine((i) * xMult, y1, (i + 1) * xMult, y2, Brushes.Green));
-            //    }
-            //}
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
